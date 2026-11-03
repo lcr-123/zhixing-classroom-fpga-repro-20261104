@@ -1,0 +1,14 @@
+知行课堂：最后明确板上候选版本的复刻工程（2026-10-29）
+
+请解压到纯英文路径。ModelSim 18.1 在中文工作路径可能无法创建编译数据库。
+板上候选位流：firmware/sdram_refresh_fix_candidate.bit
+SHA256：359FCD26F1FD66598A350352C0E6EAE3A755CF25F9D6C883626C38E5FC590C19
+此位流及源码来自同一候选交付快照；板上实际位流哈希未读取。
+
+工具：Windows；TD 6.2.168116；ModelSim Intel FPGA Edition 18.1；Python 3。目标器件EG4S20BG256，HDMI_A输出。
+TD工程：fpga/td_project/HDMI1.4b_Transmitter_v1.0.al，顶层top。
+在工程根目录执行：td_commands_prompt.exe scripts/build_td.tcl。可用TD_OPT_AREA=1、TD_SEED设置布局参数；重建bit的二进制哈希不要求等于已交付位流。
+仿真：python scripts/run_regression.py --output reviewer_regression --vsim <本机vsim.exe路径> --timeout 1200；也可在工程根目录执行vsim -c -do sim/run_frame_fifo_write.do等单项。
+TF：tf_card目录的00.bmp至12.bmp复制到FAT32 TF卡根目录。BH1750使用3.3V/GND，M15=SCL、L16=SDA、ADDR接GND；其他接线以pin.adc及板卡为准。
+
+此包对应最后一次明确记录为板上烧录的sdram_refresh_fix_candidate.bit源码，不包含后续frame_fifo_write写突发刷新门控修改。旧候选历史记录为74/74仿真通过、TD用户逻辑时序通过；全局STA有既有SDRAM SIP相位负端点。实际板上哈希未读取，久留亮线曾被用户反馈复现，不能据此宣称长期稳定或当前板上版本逐位一致。
